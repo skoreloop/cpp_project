@@ -1,0 +1,25 @@
+cmake_minimum_required(VERSION 3.20)
+project(MyProject LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(SFML_DIR "C:/SFML/install/lib/cmake/SFML")
+set(SFML_STATIC_LIBRARIES ON)
+
+find_package(SFML 3 REQUIRED COMPONENTS Graphics Window System)
+
+add_executable(MyProject
+    src/main.cpp
+    src/window/window.cpp
+)
+
+target_include_directories(MyProject PRIVATE
+    include
+)
+
+target_link_libraries(MyProject PRIVATE
+    SFML::Graphics
+    SFML::Window
+    SFML::System
+)
