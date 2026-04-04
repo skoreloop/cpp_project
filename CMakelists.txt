@@ -5,12 +5,12 @@ project(cpp_project LANGUAGES CXX)
 
 
 add_executable(forces
-    src\engine\forces_calculation.cpp
+    src/engine/forces_calculation.cpp
     particles
-    src\engine\particles.cpp
+    src/engine/particles.cpp
     Vec2D
-    src\engine\Vec2D.cpp
+    src/engine/Vec2D.cpp
     window
-    src\window\window.cpp
+    src/window/window.cpp
 )
 
