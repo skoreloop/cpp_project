@@ -1,4 +1,4 @@
-#include "window/window.hpp"
+#include "include/window.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
