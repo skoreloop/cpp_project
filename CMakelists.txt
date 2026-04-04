@@ -18,5 +18,7 @@ add_executable(forces
     particles.cpp
     Vec2D
     Vec2D.cpp
+    window
+    window.cpp
 )
 
