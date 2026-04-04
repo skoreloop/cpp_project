@@ -1,0 +1,1 @@
+ "C:/SFML/install/lib/libsfml-graphics-s.a" "C:/SFML/install/lib/libsfml-window-s.a" "C:/SFML/install/lib/libsfml-system-s.a" -lopengl32 -lwinmm -lgdi32 C:/SFML/install/lib/libfreetype.a -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 
