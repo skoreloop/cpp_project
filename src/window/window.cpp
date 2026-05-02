@@ -1,4 +1,4 @@
-#include "include/window.hpp"
+#include "window.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -7,9 +7,10 @@ namespace window
 {
     void handleEvents(sf::RenderWindow& window)
     {
-        while (auto event = window.pollEvent())
+        sf::Event event;
+        while (window.pollEvent(event))
         {
-            if (event->is<sf::Event::KeyPressed>())
+            if (event.type == sf::Event::KeyPressed)
             {
                 std::cout << "Key was pressed!" << std::endl;
                 window.close();
@@ -22,7 +23,7 @@ namespace window
         sf::RenderWindow window(
             sf::VideoMode::getDesktopMode(),
             "Тест",
-            sf::State::Fullscreen
+            sf::Style::Fullscreen  // sf::State -> sf::Style
         );
 
         while (window.isOpen())

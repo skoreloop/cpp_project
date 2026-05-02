@@ -1,16 +1,19 @@
-
 cmake_minimum_required(VERSION 3.20)
 
 project(cpp_project LANGUAGES CXX)
 
+set(SFML_DIR "C:/SFML_ready/lib/cmake/SFML")
 
-add_executable(forces
+find_package(SFML REQUIRED COMPONENTS graphics window system)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+add_executable(cpp_project
     src/engine/forces_calculation.cpp
-    particles
+     main.cpp 
     src/engine/particles.cpp
-    Vec2D
     src/engine/Vec2D.cpp
-    window
     src/window/window.cpp
 )
 
+target_link_libraries(cpp_project sfml-graphics sfml-window sfml-system)
