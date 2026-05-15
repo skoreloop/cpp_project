@@ -1,32 +1,34 @@
-#include <vector>
-#include <iostream>
-#include "engine/particles.hpp"
+#include "Visualizer.hpp"
 
-        
-
- Particle::Particle(double m = 1.0, const Vec2D& pos = Vec2D(), const Vec2D& vel = Vec2D()) : mass(m), position(pos), velocity(vel), force() {}
-
-    void Particle::WallCollision(double boxSize_x, double boxSize_y) {
-        if (position.x < 0) {
-            position.x = -position.x;          
-            velocity.x = -velocity.x;          
-        } else if (position.x > boxSize_x) {
-            position.x = 2.0 * boxSize_x - position.x;
-            velocity.x = -velocity.x;
-        }
-
-        if (position.y < 0) {
-            position.y = -position.y;
-            velocity.y = -velocity.y;
-        } else if (position.y > boxSize_y) {
-            position.y = 2.0 * boxSize_y - position.y;
-            velocity.y = -velocity.y;
+namespace engine {
+    // Первый этап Верле: обновление координат и полшага по скорости [cite: 317, 318]
+    void integrate_first_half(std::vector<Particle>& particles, double dt) {
+        for (auto& p : particles) {
+            p.velocity = p.velocity + p.force * (0.5 * dt / p.mass);
+            p.position = p.position + p.velocity * dt;
         }
     }
 
-    void Particle::VelocityStep(double dt, const std::vector<Particle>& particles, double boxSize_x, double boxSize_y) {
-        velocity = velocity + force * (dt / mass);
-        position = position + velocity * dt;
-
-        WallCollision(boxSize_x, boxSize_y);
+    // Второй этап Верле: финальное обновление скорости [cite: 317, 318]
+    void integrate_second_half(std::vector<Particle>& particles, double dt) {
+        for (auto& p : particles) {
+            p.velocity = p.velocity + p.force * (0.5 * dt / p.mass);
+        }
     }
+
+    // Обработка столкновений со стенками [cite: 278, 285]
+    void check_wall_collisions(std::vector<Particle>& particles, double width, double height) {
+        for (auto& p : particles) {
+            if (p.position.x - p.radius < 0) {
+                p.position.x = p.radius; p.velocity.x *= -1;
+            } else if (p.position.x + p.radius > width) {
+                p.position.x = width - p.radius; p.velocity.x *= -1;
+            }
+            if (p.position.y - p.radius < 0) {
+                p.position.y = p.radius; p.velocity.y *= -1;
+            } else if (p.position.y + p.radius > height) {
+                p.position.y = height - p.radius; p.velocity.y *= -1;
+            }
+        }
+    }
+}

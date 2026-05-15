@@ -1,34 +1,41 @@
-#include <vector>
-#include <iostream>
-#include "engine/forces_calculation.hpp"
-using namespace std;
+#include "Visualizer.hpp"
+#include <cmath>
+#include <algorithm>
 
+namespace engine {
+    void calculate_forces(std::vector<Particle>& particles) {
+        // Параметры для "твердых" молекул
+        const double epsilon = 5.0;  // Увеличили энергию, чтобы "отскок" был сильнее
+        const double sigma = 100.0;   // Эффективный диаметр молекулы (чуть больше радиуса отрисовки)
+        const double cut_off = 3.0 * sigma; // Радиус обрезания сил для оптимизации
+        const double cut_off2 = cut_off * cut_off;
 
-    
-Force::Force(vector<Particle>& particles_): particles(particles_) {
-        force.resize(particles.size(), vector<Vec2D>(particles.size()));
-        a_coff = 1.0;
-        b_coff = 1.0;
-    }
-Vec2D Force::forces_calc(Particle& first, Particle& second){
-        double dx = first.position[0] - second.position[0];
-        double dy = first.position[1] - second.position[1];
-        double r = sqrt(dx*dx + dy*dy);
-        double r8 = pow(r, 8);
-        double r14 = r8 * pow(r, 6);
-        
-        double force_amplitude = 12.0 * a_coff / r14 - 6.0 * b_coff / r8;
-        
-        return Vec2D(dx * force_amplitude, dy * force_amplitude);
-    }
-    
-void Force::calculation_final(){
-        int n = particles.size();
-        for(int i = 0; i < n; i++) {  
-            for(int j = i + 1; j < n; j++) {  
-                Vec2D f = forces_calc(particles[i], particles[j]);
-                force[i][j] = f;
-                force[j][i] = Vec2D(-f[0], -f[1]);
+        for (auto& p : particles) p.force = Vec2D(0, 0);
+
+        for (size_t i = 0; i < particles.size(); ++i) {
+            for (size_t j = i + 1; j < particles.size(); ++j) {
+                Vec2D diff = particles[j].position - particles[i].position;
+                double r2 = diff.x * diff.x + diff.y * diff.y;
+
+                if (r2 < cut_off2) {
+                    double r = std::sqrt(r2);
+                    
+                    // Магическая защита: если молекулы ВНУТРИ друг друга, 
+                    // ставим минимальный радиус, чтобы сила была огромной, но не бесконечной
+                    double safe_r = std::max(r, sigma * 0.7); 
+                    
+                    double s_r = sigma / safe_r;
+                    double s_r6 = std::pow(s_r, 6);
+                    double s_r12 = s_r6 * s_r6;
+
+                    // Сила Леннарда-Джонса: F = 24*eps*(2*s_r12 - s_r6) / safe_r^2
+                    double force_mag = 24.0 * epsilon * (2.0 * s_r12 - s_r6) / (safe_r * safe_r);
+
+                    Vec2D f_vec = diff * force_mag;
+                    particles[i].force = particles[i].force - f_vec;
+                    particles[j].force = particles[j].force + f_vec;
+                }
             }
         }
     }
+}
