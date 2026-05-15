@@ -1,22 +1,22 @@
-cmake_minimum_required(VERSION 3.20)
-project(cpp_project LANGUAGES CXX)
-
-set(CMAKE_PREFIX_PATH "C:/SFML/install")
-set(SFML_STATIC_LIBRARIES ON)
-
-find_package(SFML 3 REQUIRED COMPONENTS Graphics Window System)
+cmake_minimum_required(VERSION 3.10)
+project(cpp_project)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(include)
 
-add_executable(cpp_project
+# 1. Для SFML 3 имена компонентов изменились!
+find_package(SFML 3 COMPONENTS Graphics Window System REQUIRED)
+
+set(SOURCES
     main.cpp
     src/Visualizer.cpp
-    src/engine/forces_calculation.cpp
     src/engine/particles.cpp
-    # УБРАЛИ Vec2D.cpp и window.cpp, чтобы не было конфликтов 
+    src/engine/forces_calculation.cpp
 )
 
+add_executable(cpp_project ${SOURCES})
+
+# 2. Линкуем через новые цели SFML::
 target_link_libraries(cpp_project SFML::Graphics SFML::Window SFML::System)
