@@ -3,19 +3,20 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <string>
 #include <optional>
-#include "engine/particles.hpp" // Подключаем общие частицы
+#include "engine/particles.hpp"
 
 class Visualizer {
-public:
-    Visualizer(int w, int h, const std::string& title);
-    bool isOpen() const;
-    void handleEvents();
-    // ВАЖНО: используем engine::Particle
-    void render(const std::vector<engine::Particle>& particles);
-
 private:
     sf::RenderWindow window;
+public:
+
+    Visualizer(int width, int height, const std::string& title);
+    
+    void handleEvents();
+    bool isOpen() const;
+    void render(const std::vector<engine::Particle>& particles);
 };
 
-#endif
+#endif 

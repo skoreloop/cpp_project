@@ -5,7 +5,6 @@
 #include <vector>
 
 namespace engine {
-
     struct Particle {
         double mass;
         Vec2D position;
@@ -13,17 +12,17 @@ namespace engine {
         Vec2D force;
         float radius;
 
-        Particle(double m, const Vec2D& pos, const Vec2D& vel, float r = 8.0f);
-
-        // Методы для ОДНОЙ частицы (имена как в main)
-        void check_wall_collision(double width, double height);
+        Particle(double m, const Vec2D& pos, const Vec2D& vel, float r);
+        
         void integrate_first_half(double dt);
         void integrate_second_half(double dt);
+        void check_wall_collision(double width, double height);
     };
 
-    // Глобальные функции для ВЕКТОРА (то, что вызывается в main.cpp)
+    // Обертки для вектора
     void integrate_first_half(std::vector<Particle>& particles, double dt);
     void integrate_second_half(std::vector<Particle>& particles, double dt);
+    void calculate_forces(std::vector<Particle>& particles, double sigma, double epsilon);
     void check_wall_collisions(std::vector<Particle>& particles, double width, double height);
 }
 

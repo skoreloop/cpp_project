@@ -1,22 +1,28 @@
 cmake_minimum_required(VERSION 3.10)
 project(cpp_project)
 
+# Указываем стандарт C++ (для SFML 3 лучше 17 или 20)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Путь к хедерам
 include_directories(include)
 
-# 1. Для SFML 3 имена компонентов изменились!
-find_package(SFML 3 COMPONENTS Graphics Window System REQUIRED)
+# Поиск SFML 3
+find_package(SFML 3.0.2 REQUIRED COMPONENTS Graphics Window System)
 
-set(SOURCES
+# Список всех исходных файлов
+# ВАЖНО: Добавь сюда src/Simulation.cpp
+set(SOURCES 
     main.cpp
+    src/Simulation.cpp
     src/Visualizer.cpp
     src/engine/particles.cpp
     src/engine/forces_calculation.cpp
 )
 
+# Создание исполняемого файла
 add_executable(cpp_project ${SOURCES})
 
-# 2. Линкуем через новые цели SFML::
+# Линковка библиотек
 target_link_libraries(cpp_project SFML::Graphics SFML::Window SFML::System)
